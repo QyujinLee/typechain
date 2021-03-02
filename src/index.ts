@@ -40,8 +40,6 @@ const genesisBlock: Block = new Block(0, '1212', '', 'Hello', 123456);
 
 let blockchain: Block[] = [genesisBlock];
 
-console.log(blockchain);
-
 const getBlockchain = (): Block[] => blockchain;
 
 const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
@@ -67,6 +65,8 @@ const createNewBlock = (data: string): Block => {
         newTimestamp
     );
 
+    addBlock(newBlock);
+
     return newBlock;
 };
 
@@ -80,20 +80,35 @@ const getHashForBlock = (aBlock: Block): string =>
 
 const isBlockValid = (candidateBlock: Block, previousBlock: Block): boolean => {
     if (!Block.validateStructure(candidateBlock)) {
+        console.log('type 1 : error');
         return false;
     } else if (previousBlock.index + 1 !== candidateBlock.index) {
+        console.log('type 2 : error');
         return false;
     } else if (previousBlock.hash !== candidateBlock.previousHash) {
+        console.log('type 3 : error');
         return false;
     } else if (getHashForBlock(candidateBlock) !== candidateBlock.hash) {
+        console.log('type 4 : error');
         return false;
+    } else {
+        return true;
     }
 };
 
 const addBlock = (candidateBlock: Block): void => {
     if (isBlockValid(candidateBlock, getLatestBlock())) {
+        console.log('is validated');
         blockchain.push(candidateBlock);
+    } else {
+        console.log('is not validated');
     }
 };
+
+createNewBlock('second block');
+createNewBlock('third block');
+createNewBlock('fourth block');
+
+console.log(blockchain);
 
 export {};
